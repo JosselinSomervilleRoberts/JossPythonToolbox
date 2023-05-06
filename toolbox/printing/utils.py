@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, Union
 
 class Colors:
     """Colors for printing in the terminal."""
@@ -13,6 +13,27 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     END = '\033[0m'
+
+def str_to_color(color_name: str) -> str:
+    """
+    Returns the color from the color name.
+    Usage: str_to_color("red")
+    """
+    color_name = color_name.upper()
+    return getattr(Colors, color_name)
+
+def print_color(text: str, color: Union[str, List[str]]) -> None:
+    """
+    Prints text in the given color.
+    Usage: print_color("Hello world!", "red")
+    """
+    prefix = ""
+    if isinstance(color, list):
+        for c in color:
+            prefix += str_to_color(c)
+    else:
+        prefix = str_to_color(color)
+    print(prefix + text + Colors.END)
 
 def strike(text: str) -> str:
     return ''.join([u'\u0336{}'.format(c) for c in text])

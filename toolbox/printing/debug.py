@@ -1,6 +1,7 @@
 from typing import Any
 from .utils import Colors, get_terminal_width, strike
 import inspect
+import dataclasses
 
 
 def str_type(var: Any) -> str:
@@ -21,6 +22,8 @@ def str_type(var: Any) -> str:
         return "dict"
     elif str(t) == "<class 'torch.Tensor'>": # Trick to not import torch
         return "Tensor"
+    elif dataclasses.is_dataclass(var):
+        return str(t).replace("<class '__main__.", "dataclass ").replace("'>", "")
     else:
         return str(t).replace("<class '__main__.", "class ").replace("'>", "")
     
@@ -51,6 +54,16 @@ def return_str_value(var: Any, max_length: int) -> str:
             str_info += return_str_value(elt, length_available) + ", "
             if len(str_info) >= max_length - 4 and i != len(var) - 1:
                 str_info = str_info[:max_length - 4] +  "...]"
+
+                # Remove the dots that are too long (more than 3)
+                # prev_len = -1
+                # while prev_len != len(str_info):
+                #     prev_len = len(str_info)
+                #     str_info = str_info.replace("....", "...")
+                
+                return str_info
+            elif len(str_info) >= max_length - 1 and i == len(var) - 1:
+                str_info = str_info[:max_length - 1] + "]"
                 return str_info
         str_info = str_info[:-2] + "]"
         return str_info
@@ -64,6 +77,7 @@ def return_str_value(var: Any, max_length: int) -> str:
             str_info += return_str_value(key, (max_length-8) / 2)
             str_info += ": "
             str_info += return_str_value(value, (max_length-len(str_info)-6)) + ", "
+            # TODO: Handle the case where i == len(var) - 1
             if len(str_info) >= max_length - 4:
                 str_info = str_info[:max_length-4] + "...}"
                 return str_info
@@ -74,6 +88,47 @@ def return_str_value(var: Any, max_length: int) -> str:
         # Copy to CPU if necessary
         var_cpu = var.cpu()
         return return_str_value(var_cpu.tolist(), max_length)
+    # Dataclasses
+    elif dataclasses.is_dataclass(var):
+        list_infos = []
+        list_types = []
+        length_used = 0
+        incomplete = False # Ture if we were not able to include all the fields
+        for i, field in enumerate(dataclasses.fields(var)):
+            list_infos.append(field.name + "=")
+            length_available = max_length - length_used - len(list_infos[-1]) - 5
+            if i == len(dataclasses.fields(var)) - 1:
+                length_available += 5
+            list_types.append(str_type(getattr(var, field.name)))
+            list_infos[-1] += return_str_value(getattr(var, field.name), length_available)
+            length_used += len(list_infos[-1]) + 2
+            if length_used >= max_length - 3 and i != len(dataclasses.fields(var)) - 1:
+                incomplete = True
+                break
+            elif length_used >= max_length:
+                incomplete = True
+                break
+
+        # Now add the list_infos 
+        # Fit as many types as possible
+        last_type_index = -1
+        for str_t in list_types:
+            if length_used + 3 + len(str_t) <= max_length - incomplete * 3:
+                length_used += 3 + len(str_t)
+                last_type_index += 1
+            else:
+                break
+        
+        str_info = ""
+        for i, info in enumerate(list_infos):
+            str_info += info
+            if i <= last_type_index:
+                str_info += f" {Colors.BLUE}({list_types[i]}){Colors.END}"
+            str_info += ", "
+        str_info = str_info[:-2]
+        if incomplete:
+            str_info = str_info[:max_length - 3] + "..."
+        return str_info
     # Other
     else:
         str_info = str(var)
@@ -84,9 +139,10 @@ def return_str_value(var: Any, max_length: int) -> str:
 
 def return_short_str_info(var_name: str, var: Any, max_length: int = 90) -> str:
     t = type(var)
-    prefix = f"{var_name} {Colors.BLUE}({str_type(var)}){Colors.END} = "
+    str_t = str_type(var)
+    prefix = f"{var_name} {Colors.BLUE}({str_t}){Colors.END} = "
     str_info = ""
-    length_available = max_length - len(prefix) - len(Colors.BLUE) - len(Colors.END)
+    length_available = max_length - len(var_name) - len(str_t) - 6
     # Number, booleans
     if t == int or t == float:
         str_info = return_str_value(var, length_available)
@@ -133,6 +189,9 @@ def return_short_str_info(var_name: str, var: Any, max_length: int = 90) -> str:
         str_info += f"{Colors.BLUE}{str_info3}{Colors.END}"
         str_info += f"{Colors.RED}{str_info4}{Colors.END}"
         str_info += f" {Colors.GREEN}{str_info5}{Colors.END}"
+    # Dataclasses
+    elif dataclasses.is_dataclass(var):
+        str_info = return_str_value(var, length_available)
     # Other str_types
     else:
         str_info = return_str_value(var, length_available)
