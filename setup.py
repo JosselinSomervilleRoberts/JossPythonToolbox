@@ -20,6 +20,5 @@ setuptools.setup(
     install_requires=['requests',
                       'boto3',
                       'configparser',
-                      'json',
-                      'os',],
+                      'subprocess'],
 )
