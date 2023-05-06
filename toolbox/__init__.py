@@ -1,2 +1,2 @@
-import .aws
-import .printing
+import toolbox.aws
+import toolbox.printing
