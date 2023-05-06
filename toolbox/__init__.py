@@ -4,5 +4,5 @@
 # import toolbox.printing
 
 # Make the submodules available
-import toolbox.aws
-import toolbox.printing
+from . import aws
+from . import printing
