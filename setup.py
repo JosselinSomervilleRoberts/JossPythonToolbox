@@ -16,7 +16,7 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/JosselinSomervilleRoberts/JossPythonToolbox/issues"
     },
     license='MIT',
-    packages=['toolbox'],
+    packages=setuptools.find_packages(),
     install_requires=['requests',
                       'boto3',
                       'configparser'],
