@@ -19,6 +19,5 @@ setuptools.setup(
     packages=['toolbox'],
     install_requires=['requests',
                       'boto3',
-                      'configparser',
-                      'subprocess'],
+                      'configparser'],
 )
