@@ -1,6 +1,5 @@
-from .utils import (
-    Colors,
-    get_terminal_width,
-    print_subset_of_args,
-    warn
-)
+# To get sub-modules
+from . import utils
+from .utils import *
+
+# __all__ = utils.__all__.copy()
