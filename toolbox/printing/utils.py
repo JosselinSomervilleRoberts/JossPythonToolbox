@@ -14,6 +14,9 @@ class Colors:
     UNDERLINE = '\033[4m'
     END = '\033[0m'
 
+def strike(text: str) -> str:
+    return ''.join([u'\u0336{}'.format(c) for c in text])
+
 def get_terminal_width() -> int:
     """
     Returns the width of the terminal.
