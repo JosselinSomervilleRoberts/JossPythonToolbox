@@ -1,5 +1,4 @@
 # To get sub-modules
-from . import utils
-from .utils import *
+from .utils import warn
 
 # __all__ = utils.__all__.copy()
