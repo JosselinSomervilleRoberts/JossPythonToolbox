@@ -99,7 +99,7 @@ class Logger:
             self.writer.add_scalar(name, value, index)
 
     def _log_image_torch(self, name: str, image: Any, images_path: str, index: int) -> None:
-        return self._log_image_numpy(name, image.cpu().numpy(), images_path, index)
+        return self._log_image_numpy(name, image.cpu().detach().numpy(), images_path, index)
     
     def _log_image_numpy(self, name: str, image: Any, images_path: str, index: int) -> None:
         """
