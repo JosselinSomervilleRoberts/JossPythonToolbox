@@ -9,16 +9,16 @@ def get_ec2_resource(region_name: str, config: configparser.ConfigParser) -> bot
     """Returns an EC2 resource."""
     ec2_resource = boto3.resource("ec2",
                                     region_name=region_name,
-                                    aws_access_key_id=config['AWS']['ACCESS_KEY'],
-                                    aws_secret_access_key=config['AWS']['SECRET_KEY'])
+                                    aws_access_key_id=config['ACCESS_KEY'],
+                                    aws_secret_access_key=config['SECRET_KEY'])
     return ec2_resource
 
 def get_ec2_client(region_name: str, config: configparser.ConfigParser) -> boto3.client:
     """Returns an EC2 client."""
     ec2_client = boto3.client("ec2",
                                 region_name=region_name,
-                                aws_access_key_id=config['AWS']['ACCESS_KEY'],
-                                aws_secret_access_key=config['AWS']['SECRET_KEY'])
+                                aws_access_key_id=config['ACCESS_KEY'],
+                                aws_secret_access_key=config['SECRET_KEY'])
     return ec2_client
 
 def create_key_pair_if_not_exists(key_name: str, region_name: str, config: configparser.ConfigParser) -> str:
