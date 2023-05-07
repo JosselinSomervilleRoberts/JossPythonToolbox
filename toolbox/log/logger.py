@@ -45,7 +45,7 @@ class Logger:
                 if verbose: print_color("Created tensorboard writer", "green")
                 # Gives instruction on how to use tensorboard
                 print_color("To use tensorboard, run the following command in a terminal:", "bold")
-                print_color("tensorboard --logdir=" + self.save_path, "bold")
+                print_color("tensorboard --logdir=" + save_path, "bold")
                 print_color("Then open the following link in a browser:", "bold")
                 print_color("http://localhost:6006/", "bold")
             except ImportError:
