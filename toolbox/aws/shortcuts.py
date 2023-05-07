@@ -16,10 +16,11 @@ def start_instance_from_config(config_path: str, name: str = "AWS") -> None:
     start_instance(instance_id, region_name, config[name])
 
     # Wait for the instance to start
-    if config[name]['SSH_KEY_PATH'] is not None and config[name]['PUBLIC_IP'] is not None:
+    if 'PUBLIC_IP' in config[name] and config[name]['PUBLIC_IP'] is not None \
+        and 'SSH_KEY_PATH' in config[name] and config[name]['SSH_KEY_PATH'] is not None:
         print("\nTo login, wait a few seconds and run the following command:")
         print("ssh -i " + config[name]['SSH_KEY_PATH'] + " ubuntu@" + config[name]['PUBLIC_IP'])
-    elif config[name]['HOST'] is not None:
+    elif 'HOST' in config[name] and config[name]['HOST'] is not None:
         print("\nTo login, wait a few seconds and run the following command:")
         print("ssh " + config[name]['HOST'])
     else:
