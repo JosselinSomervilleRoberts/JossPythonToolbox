@@ -12,7 +12,7 @@ class Logger:
     - if tensorboard is True, then the logger will save all the infos given to it in a tensorboard file (tensorboard_path).
     """
 
-    def __init__(self, verbose: bool = False, save: bool = True, save_path: Optional[str] = None, tensorboard: bool = False):
+    def __init__(self, verbose: bool = False, save: bool = True, save_path: str = "logs", tensorboard: bool = False):
         self.verbose: bool = verbose
         self.save: bool = save
         self.save_path: str = save_path
