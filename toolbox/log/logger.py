@@ -172,10 +172,10 @@ class Logger:
         _verbose = (verbose is not None and verbose) or (verbose is None and self.verbose)
         if _verbose and not self.save and not self.tensorboard:
             warn(f"(Image) {name} - {index}: Not saved as save and tensorboard are False")
+        images_path = os.path.join(self.save_path, "images")
         if self.save:
             # Save the image in the save_path/images folder
             # First, creates the directory if it does not exist
-            images_path = os.path.join(self.save_path, "images")
             if not os.path.exists(images_path):
                 os.makedirs(images_path)
                 if _verbose: print_color("(Image) Created directory " + os.path.dirname(images_path), ["green", "bold"])
