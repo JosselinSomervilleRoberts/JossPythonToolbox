@@ -1,5 +1,5 @@
-from typing import Any
-from .utils import Colors, get_terminal_width, strike, print_visible, str_len_without_colors
+from typing import Any, Union
+from .utils import Colors, get_terminal_width, strike, print_visible, str_without_colors
 import inspect
 import dataclasses
 
@@ -339,7 +339,7 @@ def retrieve_name(var: Any, call_context: int = 0) -> str:
     except:
         return ""
 
-def debug(var: Any, visible: bool = False) -> None:
+def debug(var: Any, visible: bool = False, return_str: bool = False, display: bool = True, nested_calls: int = 0) -> Union[None, str]:
     """
     Prints the name, type and value of var (fits in one line).
     Usage: 
@@ -348,14 +348,17 @@ def debug(var: Any, visible: bool = False) -> None:
     DEBUG: a (int) = 1
     """
     width = get_terminal_width() - 1 - 4 * visible
-    var_name = retrieve_name(var, call_context=1).replace(", visible=False", "").replace(", visible=True", "")
+    var_name = retrieve_name(var, call_context=1+nested_calls).replace(", visible=False", "").replace(", visible=True", "")
     to_print = f"{Colors.BOLD}DEBUG: {Colors.END}{return_short_str_info(var_name, var, max_length=width-7)}"
-    if visible:
-        print_visible(to_print)
-    else:
-        print(to_print)
+    if display:
+        if visible:
+            print_visible(to_print)
+        else:
+            print(to_print)
+    if return_str:
+        return str_without_colors(to_print)
 
-def sdebug(var: Any, visible: bool = False) -> None:
+def sdebug(var: Any, visible: bool = False, return_str: bool = False, display: bool = True, nested_calls: int = 0) -> Union[None, str]:
     """
     Simple debug. Prints the name, type and value of var.
     Prints the raw value of var, without any formatting.
@@ -365,18 +368,21 @@ def sdebug(var: Any, visible: bool = False) -> None:
     DEBUG: a (ndarray) = [[1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
      [1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
     """
-    var_name = retrieve_name(var, call_context=1).replace(", visible=False", "").replace(", visible=True", "")
+    var_name = retrieve_name(var, call_context=1+nested_calls).replace(", visible=False", "").replace(", visible=True", "")
     to_print = f"{Colors.BOLD}DEBUG: {Colors.END}{var_name} {Colors.BLUE}({str_type(var)}){Colors.END} = {var}"
-    if visible:
-        # Split the string into lines (every get_terminal_width() - 1 characters)
-        width_split = get_terminal_width() - 1 - 4 * visible
-        lines = [to_print[i:i+width_split] for i in range(0, len(to_print), width_split)]
-        print_visible(lines)
-    else:
-        print(to_print)
+    if display:
+        if visible:
+            # Split the string into lines (every get_terminal_width() - 1 characters)
+            width_split = get_terminal_width() - 1 - 4 * visible
+            lines = [to_print[i:i+width_split] for i in range(0, len(to_print), width_split)]
+            print_visible(lines)
+        else:
+            print(to_print)
+    if return_str:
+        return str_without_colors(to_print)
 
 
-def ldebug(var: Any, n_lines_max: int = 100, visible: bool = False) -> None:
+def ldebug(var: Any, n_lines_max: int = 100, visible: bool = False, return_str: bool = False, display: bool = True, nested_calls: int = 0) -> Union[None, str]:
     """
     Long debug. Prints the name, type and value of var.
     Equivalent to debug(var) on several lines.
@@ -388,12 +394,15 @@ def ldebug(var: Any, n_lines_max: int = 100, visible: bool = False) -> None:
      [1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]]
     """
     width = (get_terminal_width() - 1) * n_lines_max
-    var_name = retrieve_name(var, call_context=1).replace(", visible=False", "").replace(", visible=True", "")
+    var_name = retrieve_name(var, call_context=1+nested_calls).replace(", visible=False", "").replace(", visible=True", "")
     to_print = f"{Colors.BOLD}DEBUG: {Colors.END}{return_short_str_info(var_name, var, max_length=width-7)}"
-    if visible:
-        # Split the string into lines (every get_terminal_width() - 1 characters)
-        width_split = get_terminal_width() - 1 - 4 * visible
-        lines = [to_print[i:i+width_split] for i in range(0, len(to_print), width_split)]
-        print_visible(lines)
-    else:
-        print(to_print)
+    if display:
+        if visible:
+            # Split the string into lines (every get_terminal_width() - 1 characters)
+            width_split = get_terminal_width() - 1 - 4 * visible
+            lines = [to_print[i:i+width_split] for i in range(0, len(to_print), width_split)]
+            print_visible(lines)
+        else:
+            print(to_print)
+    if return_str:
+        return str_without_colors(to_print)

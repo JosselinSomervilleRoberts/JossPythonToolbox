@@ -22,6 +22,16 @@ def str_to_color(color_name: str) -> str:
     color_name = color_name.upper()
     return getattr(Colors, color_name)
 
+def str_without_colors(text: str) -> str:
+    """
+    Returns the string without the color characters.
+    """
+    white_text = text
+    for color in Colors.__dict__.values():
+        if isinstance(color, str):
+            white_text = white_text.replace(color, "")
+    return white_text
+
 def str_len_without_colors(text: str) -> int:
     """
     Returns the actual length of the string without couting the color characters.
@@ -32,11 +42,7 @@ def str_len_without_colors(text: str) -> int:
     12
     """
     # Removes all the color characters
-    white_text = text
-    for color in Colors.__dict__.values():
-        if isinstance(color, str):
-            white_text = white_text.replace(color, "")
-    return len(white_text)
+    return len(str_without_colors(text))
 
 
 def print_color(text: str, color: Optional[Union[str, List[str]]] = None) -> None:
