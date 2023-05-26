@@ -15,8 +15,7 @@ class TabularModified(TabularInput):
     def record(self, key, val, step=None):
         super().record(key, val)
         if self.use_wandb:
-            prefix_str = '.'.join(self._prefixes) + "/" if len(self._prefixes) > 0 else ""
             if step is None:
-                wandb.log({prefix_str + key: val})
+                wandb.log({self._prefix_str + key: val})
             else:
-                wandb.log({prefix_str + key: val}, step=step*self.wandb_step_factor)
+                wandb.log({self._prefix_str + key: val}, step=step*self.wandb_step_factor)
