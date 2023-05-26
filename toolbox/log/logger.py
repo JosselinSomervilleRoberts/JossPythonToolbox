@@ -28,7 +28,6 @@ class Logger:
         if self.save or self.tensorboard:
             assert self.save_path is not None, "save_path cannot be None if save is True or tensorboard is True"
             # Creates the directory if it does not exist
-            debug(self.save_path)
             if not os.path.exists(self.save_path):
                 os.makedirs(self.save_path)
                 if verbose: print_color("Created directory " + os.path.dirname(self.save_path), "green")

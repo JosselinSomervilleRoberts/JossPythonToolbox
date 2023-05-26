@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='toolbox',
-    version='0.3.7',
+    version='0.4.0',
     author='Josselin Somerville Roberts',
     author_email='josselin.somerville@gmail.com',
     description='Usefull functions for my personnal use',
@@ -19,5 +19,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=['requests',
                       'boto3',
-                      'configparser'],
+                      'configparser',
+                      'dowel',
+                      'wandb'],
 )

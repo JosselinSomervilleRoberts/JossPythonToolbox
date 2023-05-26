@@ -14,6 +14,7 @@ pip install git+https://github.com/JosselinSomervilleRoberts/JossPythonToolbox.g
 Features:
 * toolbow.aws: AWS related functions to start and stop EC2 instances
 * toolbox.print: print functions to print in color, print arguments
+* toolbox.log: logging functions with tensorboard and wandb.
 
 Try the `demo.py` file to see the functions in action:
 ```bash
