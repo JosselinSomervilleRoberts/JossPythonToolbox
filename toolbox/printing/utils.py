@@ -32,6 +32,19 @@ def str_without_colors(text: str) -> str:
             white_text = white_text.replace(color, "")
     return white_text
 
+def str_with_color(text: str, color: Union[str, List[str]]) -> str:
+    """
+    Returns the string with the color characters.
+    Usage: str_with_color("Hello world!", "red")
+    """
+    prefix = ""
+    if isinstance(color, list):
+        for c in color:
+            prefix += str_to_color(c)
+    else:
+        prefix = str_to_color(color)
+    return prefix + text + Colors.END
+
 def str_len_without_colors(text: str) -> int:
     """
     Returns the actual length of the string without couting the color characters.
