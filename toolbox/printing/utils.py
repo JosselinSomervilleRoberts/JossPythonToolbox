@@ -114,7 +114,11 @@ def print_visible(text: Union[str, List[str]]) -> None:
     print_color("█" * width, "darkcyan")
     if not isinstance(text, list):
         text = [text]
+    # Seperate for each line
+    text_list: List[str] = []
     for t in text:
+        text_list += t.split("\n")
+    for t in text_list:
         print_wrapped(t, "darkcyan", width)
     print_color("█" * width, "darkcyan")
     print("")
